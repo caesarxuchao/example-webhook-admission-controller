@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1lapha1
+kind: ExternalAdmissionHookConfiguration
+metadata:
+  name: config1
+spec:
+  externalAdmissionHooks:
+    - name: podimage
+      rules:
+        - operations:
+            - CREATE
+          apiGroups:
+            - ""
+          apiVersions:
+            - v1
+          resources:
+            - pods
+      failurePolicy: Fail
+      clientConfig:
+        service:
+          namespace: default
+          name: webhook
+        caBundle:
+          
