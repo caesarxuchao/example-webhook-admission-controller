@@ -1,0 +1,4 @@
+package: github.com/caesarxuchao/example-webhook-admission-controller
+import:
+- package: k8s.io/client-go
+  version: cc44961f935a644fb82c0f4b6591543704578db7
