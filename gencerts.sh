@@ -18,7 +18,6 @@
 # reference: https://github.com/kubernetes/kubernetes/blob/master/plugin/pkg/admission/webhook/gencerts.sh
 set -e
 
-
 CN_BASE="generic_webhook_admission_example"
 
 cat > server.conf << EOF
@@ -30,9 +29,6 @@ distinguished_name = req_distinguished_name
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth, serverAuth
-subjectAltName = @alt_names
-[alt_names]
-IP.1 = 10.0.0.231
 EOF
 
 # Create a certificate authority
@@ -41,7 +37,8 @@ openssl req -x509 -new -nodes -key caKey.pem -days 100000 -out caCert.pem -subj 
 
 # Create a server certiticate
 openssl genrsa -out serverKey.pem 2048
-openssl req -new -key serverKey.pem -out server.csr -subj "/CN=${CN_BASE}_server" -config server.conf
+# Note the CN is the DNS name of the service of the webhook.
+openssl req -new -key serverKey.pem -out server.csr -subj "/CN=webhook.default.svc" -config server.conf
 openssl x509 -req -in server.csr -CA caCert.pem -CAkey caKey.pem -CAcreateserial -out serverCert.pem -days 100000 -extensions v3_req -extfile server.conf
 
 outfile=certs.go

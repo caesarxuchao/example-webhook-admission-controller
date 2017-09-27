@@ -10,4 +10,3 @@ spec:
       targetPort: 8000
   selector:
     role: webhook
-  clusterIP: 10.0.0.231
