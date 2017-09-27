@@ -23,15 +23,15 @@ import (
 	"net/http"
 	"strings"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/pkg/api/v1"
-
 	"github.com/golang/glog"
+	"k8s.io/api/admission/v1alpha1"
+	"k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // only allow pods to pull images from specific registry.
-func admit(data []byte) *AdmissionReviewStatus {
-	ar := AdmissionReview{}
+func admit(data []byte) *v1alpha1.AdmissionReviewStatus {
+	ar := v1alpha1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
 		glog.Error(err)
 		return nil
@@ -50,7 +50,7 @@ func admit(data []byte) *AdmissionReviewStatus {
 		glog.Error(err)
 		return nil
 	}
-	reviewStatus := AdmissionReviewStatus{}
+	reviewStatus := v1alpha1.AdmissionReviewStatus{}
 	for _, container := range pod.Spec.Containers {
 		// gcr.io is just an example.
 		if !strings.Contains(container.Image, "gcr.io") {
@@ -81,7 +81,7 @@ func serve(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reviewStatus := admit(body)
-	ar := AdmissionReview{
+	ar := v1alpha1.AdmissionReview{
 		Status: *reviewStatus,
 	}
 
