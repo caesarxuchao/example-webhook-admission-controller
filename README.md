@@ -1,10 +1,20 @@
+# Deprecated
+
+This example works for Kubernetes v1.8. To use webhooks in 1.9, please refer to
+the Kubernetes e2e test for the webhook
+[setup](https://github.com/kubernetes/kubernetes/blob/release-1.9/test/e2e/apimachinery/webhook.go)
+and
+[implementation](https://github.com/kubernetes/kubernetes/tree/release-1.9/test/images/webhook).
+Note that the authentication model has changed in 1.9, so the two-way tls shown
+in this repository does not work in v1.9. The webhook in the e2e test uses
+[one-way tls](https://github.com/kubernetes/kubernetes/blob/release-1.9/test/images/webhook/config.go#L48-L49).
+
 # Kubernetes External Admission Webhook Example
 
 The example shows how to build and deploy an external webhook that only admits
 pods creation and update if the container images have the "grc.io" prefix.
 
 ## Prerequisites
-
 Please use a Kubernetes release at least as new as v1.8.0 or v1.9.0-alpha.1,
 because the generated server cert/key only works with Kubernetes release that
 contains this [change](https://github.com/kubernetes/kubernetes/pull/50476).
